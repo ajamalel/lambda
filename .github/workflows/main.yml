@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-    - master
+    - main
 jobs:
   deploy_lambda:
     runs-on: ubuntu-latest
@@ -19,13 +19,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           role-to-assume: arn:aws:iam::674055165328:role/platform/ALZP-WL-Owner
           aws-region: us-east-1
-      - name: npm install
-        env:
-          CI: true
-        run: |
-          npm ci
       - name: deploy
-        run: |
-          npx ncc build index.ts
-          zip -j deploy.zip ./dist/*
-          aws lambda update-function-code --function-name=lambda-gh-action --zip-file=fileb://deploy.zip
+        run: |          
+          zip -j deploy.zip ./f_sharepoint_to_s3/*
+          aws lambda update-function-code --function-name=s3-function --zip-file=fileb://deploy.zip
